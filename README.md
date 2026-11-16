@@ -5,8 +5,6 @@
 
 `n8n` · `AI Agent` · `Groq` · `Supabase / pgvector` · `Google Gemini` · `Google Sheets` · `RAG`
 
-> [!IMPORTANT]
-> **Entorno demostrativo.** Los resultados corresponden a pruebas ejecutadas con datos ficticios. El sistema no está conectado a cuentas, pagos o información real de clientes y requiere controles adicionales antes de uso en producción.
 
 ## Resumen ejecutivo
 
