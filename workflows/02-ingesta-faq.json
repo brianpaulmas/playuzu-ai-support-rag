@@ -1,0 +1,174 @@
+{
+  "name": "PlayUZU | Ingesta FAQs sinteticas | Proyecto final (CONFIGURAR Y VALIDAR)",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "85f47403-0f58-49f3-8f35-7ffd870256b1",
+      "name": "Manual Trigger - Ingesta",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -544,
+        48
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const docs=[\n{slug:'faq-retiros',title:'FAQ - Retiros',content:'En esta demostracion academica, el estado de los retiros se consulta solamente como informacion general. El asistente no puede acceder a cuentas, conocer el saldo, confirmar el estado de una transaccion o garantizar plazos de pago. Si el cliente pregunta por su retiro particular, derivar a soporte.'},\n{slug:'faq-registro',title:'FAQ - Registro',content:'Para registrarse en la plataforma de demostracion, el usuario completa el formulario de registro y sigue las indicaciones visibles. La elegibilidad, los requisitos regulatorios y la documentacion se verifican en el sitio oficial. El asistente no realiza registros ni verifica identidades.'},\n{slug:'faq-depositos',title:'FAQ - Depositos',content:'Para realizar un deposito en la demostracion, el usuario revisa los metodos habilitados que muestra su cuenta. Los metodos, limites y disponibilidad pueden variar. El asistente no recibe datos bancarios ni ejecuta depositos. Para problemas con una operacion individual, derivar a soporte.'},\n{slug:'faq-juego-responsable',title:'FAQ - Juego responsable',content:'El juego debe ser una actividad recreativa para adultos. Si una persona manifiesta perdida de control o problemas por el juego, evitar mensajes promocionales y recomendar acudir al equipo de soporte y a recursos oficiales de ayuda. No brindar consejo clinico ni minimizar el problema.'},\n{slug:'faq-verificacion',title:'FAQ - Verificacion',content:'La verificacion de identidad depende de la normativa aplicable y de las instrucciones oficiales de la plataforma. No solicitar por chat documentos, claves, codigos ni datos sensibles. Las consultas sobre el estado especifico de la verificacion deben derivarse a soporte.'}];\nreturn docs.map(d=>({json:{text:d.title+'\\n'+d.content,metadata:{source:d.slug,title:d.title,version:'demo-1',classification:'synthetic'}}}));"
+      },
+      "id": "c26ece11-f6dc-4830-ade1-6450b8496ed4",
+      "name": "Documentos FAQ - Datos de muestra",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -320,
+        48
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "insert",
+        "tableName": {
+          "__rl": true,
+          "value": "documents",
+          "mode": "list",
+          "cachedResultName": "documents"
+        },
+        "options": {}
+      },
+      "id": "c70a82d1-ec5b-4b07-a427-cc250efbce85",
+      "name": "Supabase - Insertar documentos",
+      "type": "@n8n/n8n-nodes-langchain.vectorStoreSupabase",
+      "typeVersion": 1,
+      "position": [
+        -16,
+        48
+      ]
+    },
+    {
+      "parameters": {
+        "jsonMode": "expressionData",
+        "jsonData": "={{ $json.text }}",
+        "options": {
+          "metadata": {
+            "metadataValues": []
+          }
+        }
+      },
+      "id": "fbcda137-b7d8-470e-be8c-b5d90435fa8d",
+      "name": "Default Data Loader",
+      "type": "@n8n/n8n-nodes-langchain.documentDefaultDataLoader",
+      "typeVersion": 1,
+      "position": [
+        -144,
+        288
+      ]
+    },
+    {
+      "parameters": {
+        "chunkSize": 500,
+        "chunkOverlap": 80,
+        "options": {}
+      },
+      "id": "e2fd1a06-c40d-48ab-8a5e-036573d156ad",
+      "name": "Recursive Text Splitter",
+      "type": "@n8n/n8n-nodes-langchain.textSplitterRecursiveCharacterTextSplitter",
+      "typeVersion": 1,
+      "position": [
+        -64,
+        480
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## INGESTA DOCUMENTAL — ENTORNO DEMOSTRATIVO\nConfigurar credenciales propias, tabla pgvector de 3072 dimensiones y ejecutar la ingesta manualmente una sola vez. Datos completamente sintéticos. Consultar README.",
+        "height": 220,
+        "width": 1050,
+        "color": 5
+      },
+      "id": "24255612-ea07-46ee-b620-7444663f1eb4",
+      "name": "Nota - Ingesta",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -560,
+        -240
+      ]
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.embeddingsGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        368,
+        272
+      ],
+      "id": "d591dd74-b378-4143-bfd1-94b34800a9a5",
+      "name": "Embeddings Google Gemini"
+    }
+  ],
+  "connections": {
+    "Manual Trigger - Ingesta": {
+      "main": [
+        [
+          {
+            "node": "Documentos FAQ - Datos de muestra",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Documentos FAQ - Datos de muestra": {
+      "main": [
+        [
+          {
+            "node": "Supabase - Insertar documentos",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Default Data Loader": {
+      "ai_document": [
+        [
+          {
+            "node": "Supabase - Insertar documentos",
+            "type": "ai_document",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Recursive Text Splitter": {
+      "ai_textSplitter": [
+        [
+          {
+            "node": "Default Data Loader",
+            "type": "ai_textSplitter",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings Google Gemini": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Supabase - Insertar documentos",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "nodeGroups": [],
+  "tags": []
+}
