@@ -1,6 +1,5 @@
 PlayUZU — Agente autónomo de soporte FAQ con RAG en n8n
-Proyecto final de AI Automation | Implementación demostrativa con datos sintéticos | 16 de noviembre de 2026
-> \*\*Alcance:\*\* prototipo académico probado mediante ejecuciones manuales. No conectado a cuentas reales, saldos, pagos ni datos de clientes. No está preparado para producción sin controles adicionales.
+Proyecto final de AI Automation | 16 de noviembre de 2026
 1. Caso de negocio y necesidad de automatización
 En un casino online, el soporte recibe consultas repetitivas sobre registro, depósitos, retiros, verificación y juego responsable. Resolverlas manualmente exige consultar documentación y estados operativos incluso cuando la pregunta es informativa. Una respuesta incorrecta sobre una operación individual puede causar expectativas falsas y requiere intervención humana.
 Proceso manual objetivo: recibir una consulta, identificar el asunto, revisar la FAQ y la disponibilidad del servicio, elaborar una respuesta y derivar los casos sensibles. Proceso propuesto: un Webhook recibe el mensaje, se valida y normaliza, se incorporan datos operativos de Google Sheets, un AI Agent consulta documentación semántica en Supabase mediante RAG, decide el tratamiento y responde por HTTP o deriva al equipo de soporte.
